@@ -1,0 +1,38 @@
+version: '2.1'
+services:
+  postgres:
+    image: quay.io/azavea/postgis:postgres9.6-postgis2.3
+    volumes:
+      - ./data/:/tmp/data/
+    env_file: ./deployment/.env
+    expose:
+      - "5432"
+
+  nginx:
+    image: ascender-nginx
+    build:
+      context: ./deployment/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "9100:4443"
+    links:
+      - app-server
+    volumes:
+      - ./deployment/nginx/srv/dist/:/srv/dist/
+      - ./deployment/nginx/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./deployment/nginx/etc/nginx/includes/:/etc/nginx/includes/
+      - ./deployment/nginx/etc/nginx/conf.d/:/etc/nginx/conf.d/
+
+  app-server:
+    image: openjdk:8-jre
+    links:
+      - postgres:database.service.ascender
+    env_file: ./deployment/.env
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./server/:/opt/ascender/server/
+    working_dir: /opt/ascender/server/
+    entrypoint: ./sbt
+    command: app/run
+
