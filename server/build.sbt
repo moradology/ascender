@@ -35,7 +35,7 @@ lazy val appSettings = commonSettings ++ Seq(
     case "META-INF/MANIFEST.MF" => MergeStrategy.discard
     case _ => MergeStrategy.first
   },
-  resolvers += Resolver.bintrayRepo("azavea", "maven"),
+  resolvers += Resolver.bintrayRepo("hseeberger", "maven"),
   test in assembly := {}
 )
 lazy val loggingDependencies = List(
@@ -59,25 +59,37 @@ lazy val appDependencies = dbDependencies ++ migrationsDependencies ++
     testDependencies ++ Seq(
   Dependencies.akka,
   Dependencies.akkahttp,
+  Dependencies.akkajson,
   Dependencies.akkaHttpCors,
   Dependencies.akkastream,
   Dependencies.akkaSlf4j,
-  Dependencies.commonsIO
+  Dependencies.commonsIO,
+  Dependencies.circeCore,
+  Dependencies.circeGeneric,
+  Dependencies.circeParser
 )
 
 lazy val root = Project("root", file("."))
-  .aggregate(app)
+  .aggregate(app, datamodel)
   .settings(commonSettings:_*)
 
 lazy val app = Project("app", file("app"))
-  .dependsOn()
+  .dependsOn(datamodel)
   .settings(appSettings:_*)
   .settings({
     libraryDependencies ++= appDependencies
   })
 
+lazy val datamodel = Project("datamodel", file("datamodel"))
+  .settings(commonSettings:_*)
+  .settings({libraryDependencies ++= testDependencies ++ Seq(
+    Dependencies.commonsIO,
+    Dependencies.circeCore,
+    Dependencies.circeGeneric,
+    Dependencies.circeParser
+  )})
+
 lazy val common = Project("common", file("common"))
-  .dependsOn()
   .settings(appSettings:_*)
   .settings({libraryDependencies ++= testDependencies ++ Seq(
     Dependencies.akka,

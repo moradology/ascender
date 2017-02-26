@@ -13,4 +13,6 @@ object Version {
   val commonsIO          = "2.5"
   val scopt              = "3.5.0"
   val shapeless          = "2.2.5"
+  val circe              = "0.7.0"
+  val akkaHttpCirce      = "1.12.0"
 }
