@@ -20,4 +20,5 @@ object Dependencies {
   val circeCore    = "io.circe"          %% "circe-core"           % Version.circe
   val circeGeneric = "io.circe"          %% "circe-generic"        % Version.circe
   val circeParser  = "io.circe"          %% "circe-parser"         % Version.circe
+  val quill        = "io.getquill"       %% "quill-async-postgres" % Version.quill
 }

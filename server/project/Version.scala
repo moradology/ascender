@@ -15,4 +15,5 @@ object Version {
   val shapeless          = "2.2.5"
   val circe              = "0.7.0"
   val akkaHttpCirce      = "1.12.0"
+  val quill              = "1.1.0"
 }

@@ -70,7 +70,7 @@ lazy val appDependencies = dbDependencies ++ migrationsDependencies ++
 )
 
 lazy val root = Project("root", file("."))
-  .aggregate(app, datamodel)
+  .aggregate(app, datamodel, database)
   .settings(commonSettings:_*)
 
 lazy val app = Project("app", file("app"))
@@ -87,6 +87,13 @@ lazy val datamodel = Project("datamodel", file("datamodel"))
     Dependencies.circeCore,
     Dependencies.circeGeneric,
     Dependencies.circeParser
+  )})
+
+lazy val database = Project("database", file("database"))
+  .dependsOn(datamodel)
+  .settings(commonSettings:_*)
+  .settings({libraryDependencies ++= testDependencies ++ Seq(
+    Dependencies.quill
   )})
 
 lazy val common = Project("common", file("common"))
